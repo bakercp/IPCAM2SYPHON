@@ -28,7 +28,7 @@ If you encounter problems, use `/Applications/Utilities/Console.app` to check th
 
 #License
 
-See license.txt for details.
+See [Screenshot](https://github.com/bakercp/IPCAM2SYPHON/raw/master/license.txt) for details.
 
 #Developers
 
