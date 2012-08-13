@@ -1,5 +1,7 @@
 #IPCAM2SYPHON
 
+![Screenshot](https://github.com/bakercp/IPCAM2SYPHON/raw/master/screen.png)
+
 IPCAM2SYPHON is a bridge program that converts presents multiple IPCam video streams. coming from  as [Syphon](http://syphon.v002.info/) textures.
 
 Example IP cameras include [Axis IP Cameras](http://www.axis.com/products/video/camera/index.htm) and many inexpensive cameras found on the web.  Ultimately, it is compatible with any IP camera that can provide an [mjpeg](http://en.wikipedia.org/wiki/Motion_JPEG) video stream.
