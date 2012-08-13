@@ -16,7 +16,7 @@ Once you open up your streams, you can connect to them using the Syphon client o
 
 For optimal speed, you can disable previews on the __IPCAM2SYPHON__ app.  Key controls include:
 
-* Arrow Keys Select a Video Source
+* Arrow keys select a video source
 * (spacebar) toggles preview on the selected video source
 * '[' disables all previews
 * ']' enables all previews
@@ -28,7 +28,7 @@ See license.txt for details.
 
 #Developers
 
-__IPCAM2SYPHON__ is built with [openFrameworks](https://github.com/openframeworks/openFrameworks).  To build from source on OS X, you will need the following dependencies:
+__IPCAM2SYPHON__ is built with [openFrameworks](https://github.com/openframeworks/openFrameworks).  To build from source on OS X, you will need the following:
 
 * [XCode](https://developer.apple.com/xcode/)
 * [openFrameworks](https://github.com/openframeworks/openFrameworks)
