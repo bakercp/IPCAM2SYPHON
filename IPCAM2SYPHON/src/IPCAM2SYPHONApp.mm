@@ -207,18 +207,6 @@ void IPCAM2SYPHONApp::keyPressed  (int key){
         showVideo[currentCamera] = !showVideo[currentCamera]; 
     } else if(key == 'E') {
         disableRendering = !disableRendering;
-//    } else if(key == 'd') {
-//        for(int i = 0; i < ipcam.size(); i++) {
-//            ofRemoveListener(ipGrabber[i]->videoResized, this, &IPCAM2SYPHONApp::videoResized);
-//            //ipGrabber[i]->exit();
-//            
-//            delete ipcam[i];
-//            delete ipGrabber[i];
-//            
-//        }
-//        
-//        ipcam.clear();
-//        ipGrabber.clear();
     }
 }
 
