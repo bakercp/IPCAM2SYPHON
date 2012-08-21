@@ -23,6 +23,7 @@ For optimal speed, you can disable previews on the __IPCAM2SYPHON__ app.  Key co
 * '[' disables all previews
 * ']' enables all previews
 * 'E' toggles screen rendering
+* 's' toggles stream statistics
 
 If you encounter problems, use `/Applications/Utilities/Console.app` to check the log files.  You will likely get some hints there.  Otherwise, please feel free to post an issue to this repository.
 

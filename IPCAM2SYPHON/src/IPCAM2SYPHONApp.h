@@ -34,8 +34,6 @@ class IPCAM2SYPHONApp : public ofBaseApp{
 	
 public:
     
-    virtual ~IPCAM2SYPHONApp();
-    
 	void setup();
 	void update();
 	void draw();
@@ -45,7 +43,7 @@ public:
     void loadStreams();
     
 	vector< ofxSyphonServer* >   ipcam;
-    vector< ofxIpVideoGrabber* >	ipGrabber;
+    vector< ofxIpVideoGrabber* > ipGrabber;
     
     bool disableRendering;
 
@@ -62,6 +60,7 @@ public:
     float totalFPS;
     int numCams;
     
+    bool showStats;
     
     ofxXmlSettings XML;
     

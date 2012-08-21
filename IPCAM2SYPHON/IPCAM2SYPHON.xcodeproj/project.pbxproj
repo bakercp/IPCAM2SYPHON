@@ -35,6 +35,8 @@
 		FD4921BF15D8A6D700E72D68 /* ofxXmlSettings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FD4921BA15D8A6D700E72D68 /* ofxXmlSettings.cpp */; };
 		FD4921C515D8A97700E72D68 /* Syphon.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = FD49216C15D8A69000E72D68 /* Syphon.framework */; };
 		FD4921DA15D8B27700E72D68 /* tv.icns in CopyFiles */ = {isa = PBXBuildFile; fileRef = FD4921D715D8B17100E72D68 /* tv.icns */; };
+		FDA5D60B15E32C7900853D6E /* QTKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FDA5D60A15E32C7900853D6E /* QTKit.framework */; };
+		FDA5D60D15E32C8700853D6E /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FDA5D60C15E32C8700853D6E /* QuartzCore.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -117,6 +119,8 @@
 		FD4921BA15D8A6D700E72D68 /* ofxXmlSettings.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxXmlSettings.cpp; sourceTree = "<group>"; };
 		FD4921BB15D8A6D700E72D68 /* ofxXmlSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxXmlSettings.h; sourceTree = "<group>"; };
 		FD4921D715D8B17100E72D68 /* tv.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = tv.icns; sourceTree = "<group>"; };
+		FDA5D60A15E32C7900853D6E /* QTKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QTKit.framework; path = ../../../../../../../../../System/Library/Frameworks/QTKit.framework; sourceTree = "<group>"; };
+		FDA5D60C15E32C8700853D6E /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = ../../../../../../../../../System/Library/Frameworks/QuartzCore.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -139,6 +143,8 @@
 				E4C2424810CC5A17004149E2 /* Cocoa.framework in Frameworks */,
 				E4C2424910CC5A17004149E2 /* IOKit.framework in Frameworks */,
 				FD49218815D8A69100E72D68 /* Syphon.framework in Frameworks */,
+				FDA5D60B15E32C7900853D6E /* QTKit.framework in Frameworks */,
+				FDA5D60D15E32C8700853D6E /* QuartzCore.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -158,6 +164,8 @@
 		BBAB23C913894ECA00AA2426 /* system frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				FDA5D60C15E32C8700853D6E /* QuartzCore.framework */,
+				FDA5D60A15E32C7900853D6E /* QTKit.framework */,
 				E4C2424410CC5A17004149E2 /* AppKit.framework */,
 				E4C2424510CC5A17004149E2 /* Cocoa.framework */,
 				E4C2424610CC5A17004149E2 /* IOKit.framework */,

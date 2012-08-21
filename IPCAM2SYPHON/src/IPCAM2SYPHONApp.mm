@@ -22,40 +22,7 @@
  
  ==============================================================================*/
 
-/*==============================================================================
- 
- Copyright (c) 2009-2012 Christopher Baker <http://christopherbaker.net>
- 
- Permission is hereby granted, free of charge, to any person obtaining a copy
- of this software and associated documentation files (the "Software"), to deal
- in the Software without restriction, including without limitation the rights
- to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- copies of the Software, and to permit persons to whom the Software is
- furnished to do so, subject to the following conditions:
- 
- The above copyright notice and this permission notice shall be included in
- all copies or substantial portions of the Software.
- 
- THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- THE SOFTWARE.
- 
- ==============================================================================*/
-
 #include "IPCAM2SYPHONApp.h"
-
-IPCAM2SYPHONApp::~IPCAM2SYPHONApp() {
-    for(int i = 0; i < ipcam.size(); i++) {
-        ofRemoveListener(ipGrabber[i]->videoResized, this, &IPCAM2SYPHONApp::videoResized);
-    }
-        
-    ipcam.clear();
-    ipGrabber.clear();    
-}
 
 //--------------------------------------------------------------
 void IPCAM2SYPHONApp::setup(){
@@ -70,7 +37,7 @@ void IPCAM2SYPHONApp::setup(){
 //--------------------------------------------------------------
 void IPCAM2SYPHONApp::update(){
     // update the cameras
-    for(int i = 0; i < ipcam.size(); i++) {
+    for(int i = 0; i < ipGrabber.size(); i++) {
         ipGrabber[i]->update();
     }
 }
@@ -106,7 +73,7 @@ void IPCAM2SYPHONApp::draw(){
             ofTranslate(x,y);
         
             
-            if(i < ipcam.size()) {
+            if(i < ipGrabber.size()) {
                 
                 float kbps = ipGrabber[i]->getBitRate() / 1000.0;
                 totalKBPS+=kbps;
@@ -118,24 +85,36 @@ void IPCAM2SYPHONApp::draw(){
                     ofSetColor(255,255,255,255);
                     ipGrabber[i]->draw(0,0,vidWidth,vidHeight);
                     
-                    
-                    ofSetColor(0,0,0,127);
-                    ofFill();
-                    ofRect(10,vidHeight-85,vidWidth-20,75);
-                    
-                    
-                    ofSetColor(255,255,255);
-
-                    ofDrawBitmapString("NAME: " + ipGrabber[i]->getName(), 20, vidHeight-65);
-                    ofDrawBitmapString("SIZE: " + ofToString(ipGrabber[i]->getWidth()) 
-                                                + "x" 
-                                                + ofToString(ipGrabber[i]->getHeight()), 20, vidHeight-50);
-                    ofDrawBitmapString(" FPS: " + ofToString(fps, 2), 20, vidHeight-35);
-                    ofDrawBitmapString("Kb/S: " + ofToString(kbps,2), 20, vidHeight-20);
+                    if(showStats) {
+                        
+                        ofSetColor(0,0,0,127);
+                        ofFill();
+                        // draw the info box
+                        ofSetColor(0,80);
+                        ofRect(5,5,vidWidth-10,vidHeight-10);
+                        
+                        stringstream ss;
+                        
+                        ss << "          NAME: " << ipGrabber[i]->getCameraName() << endl;
+                        ss << "          HOST: " << ipGrabber[i]->getHost() << endl;
+                        ss << "           FPS: " << ofToString(fps,  2,13,' ') << endl;
+                        ss << "          Kb/S: " << ofToString(kbps, 2,13,' ') << endl;
+                        ss << " #Bytes Recv'd: " << ofToString(ipGrabber[i]->getNumBytesReceived(),  0,10,' ') << endl;
+                        ss << "#Frames Recv'd: " << ofToString(ipGrabber[i]->getNumFramesReceived(), 0,10,' ') << endl;
+                        ss << "Auto Reconnect: " << (ipGrabber[i]->getAutoReconnect() ? "YES" : "NO") << endl;
+                        ss << " Needs Connect: " << (ipGrabber[i]->getNeedsReconnect() ? "YES" : "NO") << endl;
+                        ss << "Time Till Next: " << ipGrabber[i]->getTimeTillNextAutoRetry() << " ms" << endl;
+                        ss << "Num Reconnects: " << ofToString(ipGrabber[i]->getReconnectCount()) << endl;
+                        ss << "Max Reconnects: " << ofToString(ipGrabber[i]->getMaxReconnects()) << endl;
+                        ss << "  Connect Fail: " << (ipGrabber[i]->hasConnectionFailed() ? "YES" : "NO");
+                        
+                        ofSetColor(255);
+                        ofDrawBitmapString(ss.str(), 10, 10+12);
+                    }
                     
                 } else {
                     ofSetColor(255,255,255,255);
-                    ofDrawBitmapString("PREVIEW DISABLED (" + ipGrabber[i]->getName() + ")", 20, vidHeight-65);
+                    ofDrawBitmapString("PREVIEW DISABLED (" + ipGrabber[i]->getCameraName() + ")", 20, vidHeight-65);
                 }
                 
             } else {
@@ -155,11 +134,8 @@ void IPCAM2SYPHONApp::draw(){
                     ofNoFill();
                     ofRect(4,4,vidWidth-8, vidHeight-8);
 
-                
-            } 
+            }
 
-            
-            
             ofDisableAlphaBlending();
 
             ofPopMatrix();
@@ -169,9 +145,8 @@ void IPCAM2SYPHONApp::draw(){
         ofDrawBitmapString("PRESS (E) TO RE-ENABLE RENDERING", 10, 20);
     }
     
-    
     // update the syphon cameras
-    for(int i = 0; i < ipcam.size(); i++) {
+    for(int i = 0; i < ipGrabber.size(); i++) {
         if(ipGrabber[i]->isFrameNew()) {
             ipcam[i]->publishTexture(&ipGrabber[i]->getTextureReference());
         }
@@ -207,14 +182,14 @@ void IPCAM2SYPHONApp::keyPressed  (int key){
         showVideo[currentCamera] = !showVideo[currentCamera]; 
     } else if(key == 'E') {
         disableRendering = !disableRendering;
+    } else if(key == 's') {
+        showStats = !showStats;
     }
 }
 
-void IPCAM2SYPHONApp::loadStreams()
-{
-	//ofxXmlSettings XML;
+void IPCAM2SYPHONApp::loadStreams() {
     
-	ofLog(OF_LOG_NOTICE, "---------------Loading Streams---------------");
+	ofLogNotice("IPCAM2SYPHONApp") << "---------------Loading Streams---------------";
 	
 	if( XML.loadFile("streams.xml") ){
 
@@ -233,9 +208,11 @@ void IPCAM2SYPHONApp::loadStreams()
         vidWidth = XML.getAttribute("window", "videoDisplayWidth", 341, 0);
         vidHeight = XML.getAttribute("window", "videoDisplayHeight", 256, 0);
         
-        disableRendering = (bool)XML.getAttribute("window", "disableRendering", 0, 0);
+        showStats = XML.getAttribute("window", "showStats", 1, 0) > 0;
+                
+        disableRendering = XML.getAttribute("window", "disableRendering", 0, 0) > 0;
         
-        string logLevel = XML.getAttribute("logger","level","error");
+        string logLevel = XML.getAttribute("logger","level","error", 0);
         
         if(Poco::icompare(logLevel,"verbose") == 0) {
             ofSetLogLevel(OF_LOG_VERBOSE);
@@ -254,8 +231,6 @@ void IPCAM2SYPHONApp::loadStreams()
         }
 
         
-     //   ofSetLogLevel((ofLogLevel)XML.getAttribute("logger","level",OF_LOG_WARNING));
-        
 		XML.pushTag("streams");
 		string tag = "stream";
 		
@@ -267,24 +242,19 @@ void IPCAM2SYPHONApp::loadStreams()
 			string username = XML.getAttribute(tag, "username", "NULL", n); 
 			string password = XML.getAttribute(tag, "password", "NULL", n); 
 			
-            int w = XML.getAttribute(tag, "width", 320,n);
-            int h = XML.getAttribute(tag, "height", 240,n);
-            
             bool display = (bool)XML.getAttribute(tag,"display", 1, n);
             
 			string logMessage = "STREAM LOADED: " + name + 
 			" address: " +  address + 
 			" username: " + username + 
-			" password: " + password + 
-            " width: " + ofToString(w) + 
-            " height: " + ofToString(h);
+			" password: " + password;
 			            
-            ofLog(OF_LOG_NOTICE, logMessage);
+            ofLogNotice("IPCAM2SYPHONApp") << logMessage;
 
             ofxIpVideoGrabber* ipGrabberI = new ofxIpVideoGrabber();
             ofxSyphonServer* syphonServerI = new ofxSyphonServer();
             
-            ipGrabberI->setName(name);
+            ipGrabberI->setCameraName(name);
             ipGrabberI->setUsername(username);
             ipGrabberI->setPassword(password);
             URI uri(address);
@@ -308,23 +278,23 @@ void IPCAM2SYPHONApp::loadStreams()
     
 		
 	} else {
-		ofLog(OF_LOG_ERROR, "Unable to load streams.xml.");
+		ofLogError("IPCAM2SYPHONApp") << "Unable to load streams.xml.";
 	}
-	ofLog(OF_LOG_NOTICE, "-----------Loading Streams Complete----------");
+	ofLogNotice("IPCAM2SYPHONApp") << "-----------Loading Streams Complete----------";
 }
 
 //--------------------------------------------------------------
 void IPCAM2SYPHONApp::videoResized(const void * sender, ofResizeEventArgs& arg) {
     
-    ofLog(OF_LOG_VERBOSE, "A VIDEO GRABBER WAS RESIZED");
+    ofLogVerbose("IPCAM2SYPHONApp") << "A VIDEO GRABBER WAS RESIZED";
     
     // find the camera that sent the resize event changed
-    for(int i = 0; i < ipcam.size(); i++) {
+    for(int i = 0; i < ipGrabber.size(); i++) {
         if(sender == ipGrabber[i]) {
-            string msg = "\tCamera connected to: " + ipGrabber[i]->getURI() + " ";
-            msg+= ("New DIM = " + ofToString(arg.width) + "/" + ofToString(arg.height));
-            ofLog(OF_LOG_VERBOSE, msg);
-            
+            stringstream msg;
+            msg << "\tCamera connected to: " << ipGrabber[i]->getURI() << " ";
+            msg << "New DIM = " << arg.width << "/" << arg.height;
+            ofLogVerbose("IPCAM2SYPHONApp") << msg;
         }
     }
     
