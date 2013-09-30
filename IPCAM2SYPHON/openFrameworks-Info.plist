@@ -6,21 +6,15 @@
 	<string>English</string>
 	<key>CFBundleExecutable</key>
 	<string>${EXECUTABLE_NAME}</string>
-	<key>CFBundleIconFile</key>
-	<string>tv</string>
 	<key>CFBundleIdentifier</key>
 	<string>net.christopherbaker.ipcam2syphon</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
-	<key>CFBundleShortVersionString</key>
-	<string>1.0</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>1.0</string>
-	<key>LSApplicationCategoryType</key>
-	<string>public.app-category.utilities</string>
+	<string>0.8.0</string>
 </dict>
 </plist>
