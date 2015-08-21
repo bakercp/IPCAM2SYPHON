@@ -168,7 +168,7 @@ void IPCAM2SYPHONApp::draw()
     {
         if(grabbers[i]->isFrameNew())
         {
-            ipcam[i]->publishTexture(&grabbers[i]->getTextureReference());
+            ipcam[i]->publishTexture(&grabbers[i]->getTexture());
         }
     }
 }
@@ -304,7 +304,7 @@ void IPCAM2SYPHONApp::loadStreams() {
 			            
             ofLogNotice("IPCAM2SYPHONApp") << logMessage;
 
-            IPVideoGrabber::SharedPtr grabbersI = IPVideoGrabber::makeShared();
+            IPVideoGrabber::SharedPtr grabbersI = std::make_shared<IPVideoGrabber>();
             ofxSyphonServer* syphonServerI = new ofxSyphonServer();
             
             grabbersI->setCameraName(name);
