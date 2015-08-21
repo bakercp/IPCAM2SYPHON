@@ -312,7 +312,6 @@ void IPCAM2SYPHONApp::loadStreams() {
             grabbersI->setPassword(password);
             Poco::URI uri(address);
             grabbersI->setURI(uri);
-            grabbersI->setMaxReconnects(1000000000L);
             grabbersI->connect();
            
             // get syphon ready
