@@ -2,24 +2,24 @@
 <logger level="VERBOSE"/>
 <streams>
 
-	<stream address="http://81.8.151.136:88/axis-cgi/mjpg/video.cgi?resolution=320x240" name="ipcam0" username="" password="" display="1"/>
-	<stream address="http://148.61.142.228/axis-cgi/mjpg/video.cgi?resolution=320x240" name="ipcam1" username="" password="" display="1"/>
-	<stream address="http://82.79.176.85:8081/axis-cgi/mjpg/video.cgi?resolution=320x240" name="ipcam2" username="" password="" display="1"/>
-	<stream address="http://213.77.33.2:8080/axis-cgi/mjpg/video.cgi?resolution=320x240" name="ipcam3" username="" password="" display="1"/>
-	
-	<stream address="http://130.15.110.15/axis-cgi/mjpg/video.cgi?resolution=320x240" name="ipcam4" username="" password="" display="1"/>
-	<stream address="http://212.244.173.167/axis-cgi/mjpg/video.cgi?resolution=320x240" name="ipcam5" username="" password="" display="1"/>
-	<stream address="http://194.103.218.15/axis-cgi/mjpg/video.cgi?resolution=320x240" name="ipcam6" username="" password="" display="1"/>
-	<stream address="http://216.8.159.21/axis-cgi/mjpg/video.cgi?resolution=320x240" name="ipcam7" username="" password="" display="1"/>
+	<stream address="http://195.200.199.8/axis-cgi/mjpg/video.cgi?resolution=320x240" name="ipcam0" username="" password="" display="1" max-reconnects="-1"/>
+	<stream address="http://107.1.228.34/axis-cgi/mjpg/video.cgi?resolution=320x240" name="ipcam1" username="" password="" display="1" max-reconnects="-1"/>
+	<stream address="http://208.65.20.83/axis-cgi/mjpg/video.cgi?resolution=320x240" name="ipcam2" username="" password="" display="1" max-reconnects="-1"/>
+	<stream address="http://128.104.138.26/axis-cgi/mjpg/video.cgi?resolution=320x240" name="ipcam3" username="" password="" display="1" max-reconnects="-1"/>
 
-	<stream address="http://147.134.38.233/axis-cgi/mjpg/video.cgi?resolution=320x240" name="ipcam8" username="" password="" display="1"/>
-	<stream address="http://216.99.115.55/axis-cgi/mjpg/video.cgi?resolution=320x240" name="ipcam9" username="" password="" display="1"/>
-	<stream address="http://kassertheatercam.montclair.edu/axis-cgi/mjpg/video.cgi?resolution=320x240" name="ipcam10" username="" password="" display="1"/>
-	<stream address="http://cafe-cam.wulib.wustl.edu/axis-cgi/mjpg/video.cgi?camera=&resolution=352x240" name="ipcam11" username="" password="" display="1"/>
+	<stream address="http://130.15.110.15/axis-cgi/mjpg/video.cgi?resolution=320x240" name="ipcam4" username="" password="" display="1" max-reconnects="-1"/>
+	<stream address="http://trackfield.webcam.oregonstate.edu/axis-cgi/mjpg/video.cgi?resolution=320x240" name="ipcam5" username="" password="" display="1" max-reconnects="-1"/>
+	<stream address="http://194.103.218.15/axis-cgi/mjpg/video.cgi?resolution=320x240" name="ipcam6" username="" password="" display="1" max-reconnects="-1"/>
+	<stream address="http://webcam.st-malo.com/axis-cgi/mjpg/video.cgi?resolution=320x240" name="ipcam7" username="" password="" display="1" max-reconnects="-1"/>
 
-	<stream address="http://212.219.113.227/axis-cgi/mjpg/video.cgi?resolution=320x240" name="ipcam12" username="" password="" display="1"/>
-	<stream address="http://129.171.176.150/axis-cgi/mjpg/video.cgi?resolution=320x240" name="ipcam13" username="" password="" display="1"/>
-	<stream address="http://72.227.87.110/anony/mjpg.cgi" name="ipcam14" username="" password="" display="1"/>
-	<stream address="http://webcam.magic.iac.es/axis-cgi/mjpg/video.cgi?resolution=320x240" name="ipcam15" username="" password="" display="1"/>
-	
+	<stream address="http://193.90.139.222:33450/axis-cgi/mjpg/video.cgi?resolution=320x240" name="ipcam8" username="" password="" display="1" max-reconnects="-1"/>
+	<stream address="http://85.199.1.130/axis-cgi/mjpg/video.cgi?resolution=320x240" name="ipcam9" username="" password="" display="1" max-reconnects="-1"/>
+	<stream address="http://85.221.20.19/axis-cgi/mjpg/video.cgi?resolution=320x240" name="ipcam10" username="" password="" display="1" max-reconnects="-1"/>
+	<stream address="http://ppcam.gotdns.com:8000/axis-cgi/mjpg/video.cgi?resolution=320x240" name="ipcam11" username="" password="" display="1" max-reconnects="-1"/>
+
+	<stream address="http://64.122.208.241:8000/axis-cgi/mjpg/video.cgi?resolution=320x240" name="ipcam12" username="" password="" display="1" max-reconnects="-1"/>
+	<stream address="http://62.168.0.189/axis-cgi/mjpg/video.cgi?resolution=320x240" name="ipcam13" username="" password="" display="1" max-reconnects="-1"/>
+	<stream address="http://217.7.66.54/axis-cgi/mjpg/video.cgi?resolution=320x240" name="ipcam14" username="" password="" display="1" max-reconnects="-1"/>
+	<stream address="http://webcam.magic.iac.es/axis-cgi/mjpg/video.cgi?resolution=320x240" name="ipcam15" username="" password="" display="1" max-reconnects="-1"/>
+
 </streams>
