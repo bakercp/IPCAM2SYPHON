@@ -24,10 +24,12 @@
 
 
 #include "ofApp.h"
+#include "ofAppGlutWindow.h"
 
 
 int main()
 {
-	ofSetupOpenGL(800, 600, OF_WINDOW);
+    ofAppGlutWindow window;
+	ofSetupOpenGL(&window, 800, 600, OF_WINDOW);
     ofRunApp(std::make_shared<ofApp>());
 }

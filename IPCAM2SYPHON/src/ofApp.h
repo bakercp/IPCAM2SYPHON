@@ -68,8 +68,8 @@ public:
     bool showStats = false;
     
     ofxXmlSettings XML;
-    
-    // This message occurs when the incoming video stream image size changes. 
+
+    // This message occurs when the incoming video stream image size changes.
     // This can happen if the IPCamera has a single broadcast state (some cheaper IPCams do this)
     // and that broadcast size is changed by another user. 
     void videoResized(const void* sender, ofResizeEventArgs& arg);
