@@ -23,20 +23,20 @@
 // =============================================================================
 
 
-#include "IPCAM2SYPHONApp.h"
+#include "ofApp.h"
 
 
-IPCAM2SYPHONApp::IPCAM2SYPHONApp()
+ofApp::ofApp()
 {
 }
 
 
-IPCAM2SYPHONApp::~IPCAM2SYPHONApp()
+ofApp::~ofApp()
 {
 }
 
 
-void IPCAM2SYPHONApp::setup()
+void ofApp::setup()
 {
     ofSetLogLevel(OF_LOG_NOTICE);
     loadStreams();
@@ -48,7 +48,7 @@ void IPCAM2SYPHONApp::setup()
 }
 
 
-void IPCAM2SYPHONApp::update()
+void ofApp::update()
 {
     // Update the cameras.
     for (auto& grabber: grabbers)
@@ -58,7 +58,7 @@ void IPCAM2SYPHONApp::update()
 }
 
 
-void IPCAM2SYPHONApp::draw()
+void ofApp::draw()
 {
     ofBackground(0,0,0);
 
@@ -100,17 +100,17 @@ void IPCAM2SYPHONApp::draw()
 
                 if (showVideo[i])
                 {
-                    ofSetColor(255,255,255,255);
-                    grabbers[i]->draw(0,0,vidWidth,vidHeight);
+                    ofSetColor(255);
+                    grabbers[i]->draw(0, 0, vidWidth, vidHeight);
 
                     if (showStats)
                     {
 
-                        ofSetColor(0,0,0,127);
+                        ofSetColor(0, 127);
                         ofFill();
                         // draw the info box
-                        ofSetColor(0,80);
-                        ofDrawRectangle(5,5,vidWidth-10,vidHeight-10);
+                        ofSetColor(0, 80);
+                        ofDrawRectangle(5, 5, vidWidth - 10, vidHeight - 10);
 
                         std::stringstream ss;
 
@@ -131,14 +131,14 @@ void IPCAM2SYPHONApp::draw()
                         ss << "  Connect Fail: " << (grabbers[i]->hasConnectionFailed() ? "YES" : "NO");
 
                         ofSetColor(255);
-                        ofDrawBitmapString(ss.str(), 10, 10+12);
+                        ofDrawBitmapString(ss.str(), 10, 10 + 12);
                     }
 
                 }
                 else
                 {
                     ofSetColor(255);
-                    ofDrawBitmapString("PREVIEW DISABLED (" + grabbers[i]->getCameraName() + ")", 20, vidHeight-65);
+                    ofDrawBitmapString("PREVIEW DISABLED (" + grabbers[i]->getCameraName() + ")", 20, vidHeight - 65);
                 }
 
             }
@@ -246,9 +246,9 @@ void IPCAM2SYPHONApp::keyPressed(int key)
 }
 
 
-void IPCAM2SYPHONApp::loadStreams()
+void ofApp::loadStreams()
 {
-    ofLogNotice("IPCAM2SYPHONApp::loadStreams") << "---------------Loading Streams---------------";
+    ofLogNotice("ofApp::loadStreams") << "---------------Loading Streams---------------";
 
     if (XML.loadFile("streams.xml"))
     {
@@ -326,7 +326,7 @@ void IPCAM2SYPHONApp::loadStreams()
             logMessage << " username: " << username;
             logMessage << " password: " << password;
 
-            ofLogNotice("IPCAM2SYPHONApp::loadStreams") << logMessage.str();
+            ofLogNotice("ofApp::loadStreams") << logMessage.str();
 
             auto grabbersI = std::make_unique<ofx::Video::IPVideoGrabber>();
             auto syphonServerI = std::make_unique<ofxSyphonServer>();
@@ -346,7 +346,7 @@ void IPCAM2SYPHONApp::loadStreams()
             // Set up the video resized listener.
             ofAddListener(grabbersI->videoResized,
                           this,
-                          &IPCAM2SYPHONApp::videoResized);
+                          &ofApp::videoResized);
 
             ipcam.push_back(std::move(syphonServerI));
             grabbers.push_back(std::move(grabbersI));
@@ -359,16 +359,16 @@ void IPCAM2SYPHONApp::loadStreams()
     }
     else
     {
-        ofLogError("IPCAM2SYPHONApp::loadStreams") << "Unable to load streams.xml.";
+        ofLogError("ofApp::loadStreams") << "Unable to load streams.xml.";
     }
 
-    ofLogNotice("IPCAM2SYPHONApp::loadStreams") << "-----------Loading Streams Complete----------";
+    ofLogNotice("ofApp::loadStreams") << "-----------Loading Streams Complete----------";
 }
 
 
-void IPCAM2SYPHONApp::videoResized(const void* sender, ofResizeEventArgs& arg)
+void ofApp::videoResized(const void* sender, ofResizeEventArgs& arg)
 {
-    ofLogVerbose("IPCAM2SYPHONApp::videoResized") << "A a video grabber was resized.";
+    ofLogVerbose("ofApp::videoResized") << "A a video grabber was resized.";
 
     // Find the camera that sent the resize event changed
     for (std::size_t i = 0; i < grabbers.size(); i++)
@@ -378,7 +378,7 @@ void IPCAM2SYPHONApp::videoResized(const void* sender, ofResizeEventArgs& arg)
             std::stringstream msg;
             msg << "\tCamera connected to: " << grabbers[i]->getURI() << " ";
             msg << "New DIM = " << arg.width << "/" << arg.height;
-            ofLogVerbose("IPCAM2SYPHONApp::videoResized") << msg.str();
+            ofLogVerbose("ofApp::videoResized") << msg.str();
         }
     }
 }

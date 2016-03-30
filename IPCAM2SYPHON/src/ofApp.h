@@ -23,14 +23,56 @@
 // =============================================================================
 
 
-#include "IPCAM2SYPHONApp.h"
+#pragma once
 
 
-int main()
-{
-	NSAutoreleasePool *pool;
-    pool = [[NSAutoreleasePool alloc] init];
-	ofSetupOpenGL(800, 600,OF_WINDOW);
-    ofRunApp(std::make_shared<IPCAM2SYPHONApp>());
-	[pool drain];
-}
+#include "ofMain.h"
+#include "ofxSyphonServer.h"
+#include "ofxXmlSettings.h"
+#include "IPVideoGrabber.h"
+
+
+class ofApp: public ofBaseApp
+{	
+public:
+    ofApp();
+    virtual ~ofApp();
+
+	void setup();
+	void update();
+	void draw();
+	
+	void keyPressed(int key);
+	
+    void loadStreams();
+    
+	std::vector<std::unique_ptr<ofxSyphonServer>> ipcam;
+    std::vector<std::unique_ptr<ofx::Video::IPVideoGrabber>> grabbers;
+    
+    bool disableRendering = true;
+
+    std::vector<bool> showVideo;
+
+    int currentCamera = 0;
+    
+    int numRows = 0;
+    int numCols = 0;
+    
+    int vidWidth = 0;
+    int vidHeight = 0;
+    
+    float totalKBPS = 0;
+    float totalFPS = 0;
+    int numCams = 0;
+    
+    bool showStats = false;
+    
+    ofxXmlSettings XML;
+    
+    // This message occurs when the incoming video stream image size changes. 
+    // This can happen if the IPCamera has a single broadcast state (some cheaper IPCams do this)
+    // and that broadcast size is changed by another user. 
+    void videoResized(const void* sender, ofResizeEventArgs& arg);
+
+};
+
