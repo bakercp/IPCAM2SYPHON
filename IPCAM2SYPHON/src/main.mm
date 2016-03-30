@@ -30,7 +30,7 @@ int main()
 {
 	NSAutoreleasePool *pool;
     pool = [[NSAutoreleasePool alloc] init];
-	ofSetupOpenGL(800,600,OF_WINDOW);
-	ofRunApp(new IPCAM2SYPHONApp());
+	ofSetupOpenGL(800, 600,OF_WINDOW);
+    ofRunApp(std::make_shared<IPCAM2SYPHONApp>());
 	[pool drain];
 }

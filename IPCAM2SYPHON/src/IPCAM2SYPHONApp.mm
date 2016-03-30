@@ -26,34 +26,46 @@
 #include "IPCAM2SYPHONApp.h"
 
 
-//------------------------------------------------------------------------------
+IPCAM2SYPHONApp::IPCAM2SYPHONApp()
+{
+}
+
+
+IPCAM2SYPHONApp::~IPCAM2SYPHONApp()
+{
+}
+
+
 void IPCAM2SYPHONApp::setup()
 {
     ofSetLogLevel(OF_LOG_NOTICE);
-	loadStreams();
-	ofSetWindowTitle("IPCAM TO SYPHON");
-	ofSetFrameRate(60);
-    // if vertical sync is off, we can go a bit fast... this caps the framerate at 60fps.
+    loadStreams();
+    ofSetWindowTitle("IPCAM TO SYPHON");
+    ofSetFrameRate(60);
+    // If vertical sync is off, we can go a bit fast.
+    // This caps the framerate at 60fps.
     currentCamera = 0;
 }
 
-//------------------------------------------------------------------------------
+
 void IPCAM2SYPHONApp::update()
 {
-    // update the cameras
-    for(std::size_t i = 0; i < grabbers.size(); i++)
+    // Update the cameras.
+    for (auto& grabber: grabbers)
     {
-        grabbers[i]->update();
+        grabber->update();
     }
 }
 
-//------------------------------------------------------------------------------
+
 void IPCAM2SYPHONApp::draw()
-{	  
+{
     ofBackground(0,0,0);
-    
-    if(!disableRendering) {
+
+    if (!disableRendering)
+    {
         ofSetHexColor(0xffffff);
+
         int row = 0;
         int col = 0;
         int x = 0;
@@ -62,94 +74,94 @@ void IPCAM2SYPHONApp::draw()
         totalKBPS = 0;
         totalFPS = 0;
 
-        for(std::size_t i = 0; i < numRows * numCols; i++)
+        for (std::size_t i = 0; i < numRows * numCols; ++i)
         {
-            
             ofEnableAlphaBlending();
 
             x = col * vidWidth;
             y = row * vidHeight;
             row = (row + 1) % numRows;
 
-            if(row == 0)
+            if (row == 0)
             {
                 col = (col + 1) % numCols;
             }
 
             ofPushMatrix();
-            ofTranslate(x,y);
-        
-            
-            if(i < grabbers.size())
+            ofTranslate(x, y);
+
+            if (i < grabbers.size())
             {
-                
                 float kbps = grabbers[i]->getBitRate() / 1000.0;
                 totalKBPS+=kbps;
-                
+
                 float fps = grabbers[i]->getFrameRate();
                 totalFPS+=fps;
-                
-                if(showVideo[i])
+
+                if (showVideo[i])
                 {
                     ofSetColor(255,255,255,255);
                     grabbers[i]->draw(0,0,vidWidth,vidHeight);
-                    
-                    if(showStats)
+
+                    if (showStats)
                     {
-                        
+
                         ofSetColor(0,0,0,127);
                         ofFill();
                         // draw the info box
                         ofSetColor(0,80);
-                        ofRect(5,5,vidWidth-10,vidHeight-10);
-                        
+                        ofDrawRectangle(5,5,vidWidth-10,vidHeight-10);
+
                         std::stringstream ss;
-                        
-                        ss << "          NAME: " << grabbers[i]->getCameraName() << endl;
-                        ss << "          HOST: " << grabbers[i]->getHost() << endl;
-                        ss << "           FPS: " << ofToString(fps,  2,13,' ') << endl;
-                        ss << "          Kb/S: " << ofToString(kbps, 2,13,' ') << endl;
-                        ss << " #Bytes Recv'd: " << ofToString(grabbers[i]->getNumBytesReceived(),  0,10,' ') << endl;
-                        ss << "#Frames Recv'd: " << ofToString(grabbers[i]->getNumFramesReceived(), 0,10,' ') << endl;
-                        ss << "Auto Reconnect: " << (grabbers[i]->getAutoReconnect() ? "YES" : "NO") << endl;
-                        ss << " Needs Connect: " << (grabbers[i]->getNeedsReconnect() ? "YES" : "NO") << endl;
-                        ss << "Time Till Next: " << grabbers[i]->getTimeTillNextAutoRetry() << " ms" << endl;
-                        ss << "Num Reconnects: " << ofToString(grabbers[i]->getReconnectCount()) << endl;
-                        ss << "Max Reconnects: " << ofToString(grabbers[i]->getMaxReconnects()) << endl;
+
+                        ss << "          NAME: " << grabbers[i]->getCameraName() << std::endl;
+                        ss << "          HOST: " << grabbers[i]->getHost() << std::endl;
+                        ss << "           FPS: " << ofToString(fps, 2, 13, ' ') << std::endl;
+                        ss << "          Kb/S: " << ofToString(kbps, 2, 13, ' ') << std::endl;
+                        ss << " #Bytes Recv'd: " << ofToString(grabbers[i]->getNumBytesReceived(), 0, 10, ' ') << std::endl;
+                        ss << "#Frames Recv'd: " << ofToString(grabbers[i]->getNumFramesReceived(), 0, 10, ' ') << std::endl;
+                        ss << "Auto Reconnect: " << (grabbers[i]->getAutoReconnect() ? "YES" : "NO") << std::endl;
+                        ss << " Needs Connect: " << (grabbers[i]->getNeedsReconnect() ? "YES" : "NO") << std::endl;
+                        ss << "Time Till Next: " << grabbers[i]->getTimeTillNextAutoRetry() << " ms" << std::endl;
+                        ss << "Num Reconnects: " << ofToString(grabbers[i]->getReconnectCount()) << std::endl;
+
+                        std::string maxReconnects = (grabbers[i]->getMaxReconnects() == -1) ? "Unlimited" : std::to_string(grabbers[i]->getMaxReconnects());
+
+                        ss << "Max Reconnects: " << maxReconnects << std::endl;
                         ss << "  Connect Fail: " << (grabbers[i]->hasConnectionFailed() ? "YES" : "NO");
-                        
+
                         ofSetColor(255);
                         ofDrawBitmapString(ss.str(), 10, 10+12);
                     }
-                    
+
                 }
                 else
                 {
-                    ofSetColor(255,255,255,255);
+                    ofSetColor(255);
                     ofDrawBitmapString("PREVIEW DISABLED (" + grabbers[i]->getCameraName() + ")", 20, vidHeight-65);
                 }
-                
+
             }
             else
             {
-                ofSetColor(255,255,255,255);
-                ofDrawBitmapString("NO CAMERA CONNECTED", 20, vidHeight-65);
+                ofSetColor(255);
+                ofDrawBitmapString("NO CAMERA CONNECTED", 20, vidHeight - 65);
             }
-            
+
             // draw the selector box
-            if(currentCamera == i)
+            if (currentCamera == i)
             {
-                ofSetColor(255,0,0,100);
+                ofSetColor(255, 0, 0, 100);
                 ofSetLineWidth(4);
                 ofNoFill();
-                ofRect(4,4,vidWidth-8, vidHeight-8);
+                ofDrawRectangle(4, 4, vidWidth - 8, vidHeight - 8);
             }
             else
             {
-                ofSetColor(255,255,0,100);
+                ofSetColor(255, 255, 0, 100);
                 ofSetLineWidth(4);
                 ofNoFill();
-                ofRect(4,4,vidWidth-8, vidHeight-8);
+                ofDrawRectangle(4, 4, vidWidth - 8, vidHeight - 8);
             }
 
             ofDisableAlphaBlending();
@@ -159,60 +171,69 @@ void IPCAM2SYPHONApp::draw()
     }
     else
     {
-        ofSetColor(255,255,255,255);
+        ofSetColor(255);
         ofDrawBitmapString("PRESS (E) TO RE-ENABLE RENDERING", 10, 20);
     }
-    
+
     // update the syphon cameras
     for(std::size_t i = 0; i < grabbers.size(); i++)
     {
-        if(grabbers[i]->isFrameNew())
+        if (grabbers[i]->isFrameNew())
         {
-            ipcam[i]->publishTexture(&grabbers[i]->getTextureReference());
+            ipcam[i]->publishTexture(&grabbers[i]->getTexture());
         }
     }
 }
 
-//------------------------------------------------------------------------------
+
 void IPCAM2SYPHONApp::keyPressed(int key)
 {
-    
-    int ccY = currentCamera % numCols; 
+    int ccY = currentCamera % numCols;
     int ccX = (currentCamera - ccY) / numCols;
-    
-    if(key == OF_KEY_UP)
+
+    if (key == OF_KEY_UP)
     {
         ccY = ccY - 1;
-        if(ccY < 0) ccY = (numRows -1 );
-        currentCamera = ccX*numCols+ccY;
+
+        if (ccY < 0)
+        {
+            ccY = (numRows -1 );
+        }
+
+        currentCamera = ccX * numCols + ccY;
     }
-    else if(key == OF_KEY_DOWN)
+    else if (key == OF_KEY_DOWN)
     {
         ccY = (ccY + 1) % numRows;
-        currentCamera = ccX*numCols+ccY;
+        currentCamera = ccX * numCols + ccY;
     }
-    else if(key == OF_KEY_RIGHT)
+    else if (key == OF_KEY_RIGHT)
     {
         ccX = (ccX + 1) % numCols;
-        currentCamera = ccX*numCols+ccY;
+        currentCamera = ccX * numCols + ccY;
     }
-    else if(key == OF_KEY_LEFT)
+    else if (key == OF_KEY_LEFT)
     {
         ccX = ccX - 1;
-        if(ccX < 0) ccX = (numCols -1 );
-        currentCamera = ccX*numCols+ccY;
+
+        if (ccX < 0)
+        {
+            ccX = (numCols - 1);
+        }
+
+        currentCamera = ccX * numCols + ccY;
     }
-    else if(key == '[')
+    else if (key == '[')
     {
-        for(std::size_t i = 0; i < showVideo.size(); i++) showVideo[i] = false;
+        showVideo.assign(showVideo.size(), false);
     }
-    else if(key == ']')
+    else if (key == ']')
     {
-        for(std::size_t i = 0; i < showVideo.size(); i++) showVideo[i] = true;
+        showVideo.assign(showVideo.size(), true);
     }
     else if(key == ' ')
     {
-        showVideo[currentCamera] = !showVideo[currentCamera]; 
+        showVideo[currentCamera] = !showVideo[currentCamera];
     }
     else if(key == 'E')
     {
@@ -224,136 +245,141 @@ void IPCAM2SYPHONApp::keyPressed(int key)
     }
 }
 
-//------------------------------------------------------------------------------
-void IPCAM2SYPHONApp::loadStreams() {
-    
-	ofLogNotice("IPCAM2SYPHONApp") << "---------------Loading Streams---------------";
-	
-	if(XML.loadFile("streams.xml"))
-    {
 
+void IPCAM2SYPHONApp::loadStreams()
+{
+    ofLogNotice("IPCAM2SYPHONApp::loadStreams") << "---------------Loading Streams---------------";
+
+    if (XML.loadFile("streams.xml"))
+    {
         int x = XML.getAttribute("window", "x", 100, 0);
         int y = XML.getAttribute("window", "y", 100, 0);
 
         int width = XML.getAttribute("window", "width", 1024, 0);
         int height = XML.getAttribute("window", "height", 1024, 0);
 
-        ofSetWindowPosition(x,y);
-        ofSetWindowShape(width,height);
-        
+        ofSetWindowPosition(x, y);
+        ofSetWindowShape(width, height);
+
         numRows = XML.getAttribute("window", "rows", 3, 0);
         numCols = XML.getAttribute("window", "cols", 3, 0);
-        
+
         vidWidth = XML.getAttribute("window", "videoDisplayWidth", 341, 0);
         vidHeight = XML.getAttribute("window", "videoDisplayHeight", 256, 0);
-        
+
         showStats = XML.getAttribute("window", "showStats", 1, 0) > 0;
-                
+
         disableRendering = XML.getAttribute("window", "disableRendering", 0, 0) > 0;
-        
-        string logLevel = XML.getAttribute("logger","level","error", 0);
-        
-        if(Poco::icompare(logLevel,"verbose") == 0)
+
+        std::string logLevel = XML.getAttribute("logger", "level", "error", 0);
+
+        if (Poco::icompare(logLevel, "verbose") == 0)
         {
             ofSetLogLevel(OF_LOG_VERBOSE);
         }
-        else if(Poco::icompare(logLevel,"notice") == 0)
+        else if (Poco::icompare(logLevel, "notice") == 0)
         {
             ofSetLogLevel(OF_LOG_NOTICE);
         }
-        else if(Poco::icompare(logLevel,"warning") == 0)
+        else if (Poco::icompare(logLevel, "warning") == 0)
         {
             ofSetLogLevel(OF_LOG_WARNING);
         }
-        else if(Poco::icompare(logLevel,"error") == 0)
+        else if (Poco::icompare(logLevel, "error") == 0)
         {
             ofSetLogLevel(OF_LOG_ERROR);
         }
-        else if(Poco::icompare(logLevel,"fatal") == 0)
+        else if (Poco::icompare(logLevel, "fatal") == 0)
         {
             ofSetLogLevel(OF_LOG_FATAL_ERROR);
         }
-        else if(Poco::icompare(logLevel,"silent") == 0)
+        else if (Poco::icompare(logLevel, "silent") == 0)
         {
-            ofSetLogLevel(OF_LOG_SILENT);	// this one is special and should always be last,
+            // This one is special and should always be last.
+            ofSetLogLevel(OF_LOG_SILENT);
         }
         else
         {
             ofSetLogLevel(OF_LOG_WARNING);
         }
 
-        
-		XML.pushTag("streams");
-		string tag = "stream";
-		
-		int nCams = XML.getNumTags(tag);
-		
-		for(std::size_t n = 0; n < nCams; n++)
-        {
-			string name = XML.getAttribute(tag, "name", "unknown", n);
-			string address = XML.getAttribute(tag, "address", "NULL", n);
-			string username = XML.getAttribute(tag, "username", "NULL", n); 
-			string password = XML.getAttribute(tag, "password", "NULL", n); 
-			
-            bool display = (bool)XML.getAttribute(tag,"display", 1, n);
-            
-			string logMessage = "STREAM LOADED: " + name + 
-			" address: " +  address + 
-			" username: " + username + 
-			" password: " + password;
-			            
-            ofLogNotice("IPCAM2SYPHONApp") << logMessage;
 
-            IPVideoGrabber::SharedPtr grabbersI = IPVideoGrabber::makeShared();
-            ofxSyphonServer* syphonServerI = new ofxSyphonServer();
-            
+        XML.pushTag("streams");
+        std::string tag = "stream";
+
+        int nCams = XML.getNumTags(tag);
+
+        for (std::size_t n = 0; n < nCams; n++)
+        {
+            std::string name = XML.getAttribute(tag, "name", "unknown", n);
+            std::string address = XML.getAttribute(tag, "address", "NULL", n);
+            std::string username = XML.getAttribute(tag, "username", "NULL", n);
+            std::string password = XML.getAttribute(tag, "password", "NULL", n);
+
+            int maxReconnects = XML.getAttribute(tag, "max-reconnects", 20);
+
+            bool display = (bool)XML.getAttribute(tag, "display", 1, n);
+
+            std::stringstream logMessage;
+            logMessage << "STREAM LOADED: " << name;
+            logMessage << " address: " << address;
+            logMessage << " username: " << username;
+            logMessage << " password: " << password;
+
+            ofLogNotice("IPCAM2SYPHONApp::loadStreams") << logMessage.str();
+
+            auto grabbersI = std::make_unique<ofx::Video::IPVideoGrabber>();
+            auto syphonServerI = std::make_unique<ofxSyphonServer>();
+
             grabbersI->setCameraName(name);
             grabbersI->setUsername(username);
             grabbersI->setPassword(password);
+            grabbersI->setMaxReconnects(maxReconnects);
+
             Poco::URI uri(address);
             grabbersI->setURI(uri);
             grabbersI->connect();
-           
-            // get syphon ready
+
+            // Get syphon ready.
             syphonServerI->setName(name);
 
-            // set up the listener!
-            ofAddListener(grabbersI->videoResized, this, &IPCAM2SYPHONApp::videoResized);
-         
-            ipcam.push_back(syphonServerI);
-            grabbers.push_back(grabbersI);
-            showVideo.push_back(display);
-            
-		}
-		
-		XML.popTag();
+            // Set up the video resized listener.
+            ofAddListener(grabbersI->videoResized,
+                          this,
+                          &IPCAM2SYPHONApp::videoResized);
 
-	}
+            ipcam.push_back(std::move(syphonServerI));
+            grabbers.push_back(std::move(grabbersI));
+
+            showVideo.push_back(display);
+        }
+
+        XML.popTag();
+
+    }
     else
     {
-		ofLogError("IPCAM2SYPHONApp") << "Unable to load streams.xml.";
-	}
+        ofLogError("IPCAM2SYPHONApp::loadStreams") << "Unable to load streams.xml.";
+    }
 
-    ofLogNotice("IPCAM2SYPHONApp") << "-----------Loading Streams Complete----------";
+    ofLogNotice("IPCAM2SYPHONApp::loadStreams") << "-----------Loading Streams Complete----------";
 }
 
-//------------------------------------------------------------------------------
+
 void IPCAM2SYPHONApp::videoResized(const void* sender, ofResizeEventArgs& arg)
 {
-    
-    ofLogVerbose("IPCAM2SYPHONApp") << "A VIDEO GRABBER WAS RESIZED";
-    
-    // find the camera that sent the resize event changed
-    for(std::size_t i = 0; i < grabbers.size(); i++)
+    ofLogVerbose("IPCAM2SYPHONApp::videoResized") << "A a video grabber was resized.";
+
+    // Find the camera that sent the resize event changed
+    for (std::size_t i = 0; i < grabbers.size(); i++)
     {
-        if(sender == grabbers[i].get())
+        if (sender == grabbers[i].get())
         {
             std::stringstream msg;
             msg << "\tCamera connected to: " << grabbers[i]->getURI() << " ";
             msg << "New DIM = " << arg.width << "/" << arg.height;
-            ofLogVerbose("IPCAM2SYPHONApp") << msg;
+            ofLogVerbose("IPCAM2SYPHONApp::videoResized") << msg.str();
         }
     }
-    
 }
 

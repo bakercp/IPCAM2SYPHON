@@ -32,14 +32,12 @@
 #include "IPVideoGrabber.h"
 
 
-using ofx::Video::IPVideoGrabber;
-using ofx::Video::SharedIPVideoGrabber;
-
-
 class IPCAM2SYPHONApp: public ofBaseApp
 {	
 public:
-    
+    IPCAM2SYPHONApp();
+    virtual ~IPCAM2SYPHONApp();
+
 	void setup();
 	void update();
 	void draw();
@@ -48,25 +46,26 @@ public:
 	
     void loadStreams();
     
-	std::vector<ofxSyphonServer*> ipcam;
-    std::vector<IPVideoGrabber::SharedPtr> grabbers;
+	std::vector<std::unique_ptr<ofxSyphonServer>> ipcam;
+    std::vector<std::unique_ptr<ofx::Video::IPVideoGrabber>> grabbers;
     
-    bool disableRendering;
+    bool disableRendering = true;
 
     std::vector<bool> showVideo;
-    int currentCamera;
+
+    int currentCamera = 0;
     
-    int numRows;
-    int numCols;
+    int numRows = 0;
+    int numCols = 0;
     
-    int vidWidth;
-    int vidHeight;
+    int vidWidth = 0;
+    int vidHeight = 0;
     
-    float totalKBPS;
-    float totalFPS;
-    int numCams;
+    float totalKBPS = 0;
+    float totalFPS = 0;
+    int numCams = 0;
     
-    bool showStats;
+    bool showStats = false;
     
     ofxXmlSettings XML;
     
