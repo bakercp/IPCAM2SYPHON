@@ -186,7 +186,7 @@ void ofApp::draw()
 }
 
 
-void IPCAM2SYPHONApp::keyPressed(int key)
+void ofApp::keyPressed(int key)
 {
     int ccY = currentCamera % numCols;
     int ccX = (currentCamera - ccY) / numCols;
